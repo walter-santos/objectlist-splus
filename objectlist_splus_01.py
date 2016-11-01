@@ -88,6 +88,9 @@ if settings['output'] is not None:
 out = open(output, 'a+')
 objectlistOrig = out.readlines()
 
-objectlist = list(set(objectlist+objectlistOrig))
+objectlist = list(set(objectlist))
+objectlistNew = [o for o in objectlist if o not in objectlistOrig]
+
+out.write('\n'.join(objectlistNew))
 
 out.close()
