@@ -24,13 +24,6 @@ import os.path
 from astropy.io import fits
 import time
 
-
-"""
-FUNCTIONS
-"""
-
-
-
 """
 MAIN
 """
@@ -45,7 +38,7 @@ parser.add_argument('-p','--path', default='', help='path to the images')
 python objectlist_splus_01.py -n "2016/10/30"
 
 TIP: If you are running the script inside the same folder as the images are,
-then set the night to ''.
+then set the night to '.'.
 """
 
 """
@@ -63,9 +56,11 @@ if settings['night'] is not None:
 path = settings['path']+night
 
 filenames = list()
-for f in os.walk(path)[2]:
-    if os.path.splitext(f)[1].lower() is '.fits':
+for f in next(os.walk(path))[2]:
+    if os.path.splitext(f)[1].lower() == '.fits':
         filenames.append(f)
+
+#print filenames
 
 objectlist = list()
 for f in filenames:
@@ -77,7 +72,9 @@ for f in filenames:
         try:
             obj = hdr['OBJECT']
         except:
+            """
             print('WARNING: Unable to find keyword OBJECT in file '+f+'. Ignoring it.\n')
+            """
         else:
             objectlist.append(obj)
 
@@ -86,7 +83,7 @@ if settings['output'] is not None:
     output = settings['output']
 
 out = open(output, 'a+')
-objectlistOrig = out.readlines()
+objectlistOrig = [l.strip('\n\r') for l in out.readlines()]
 
 objectlist = list(set(objectlist))
 objectlistNew = [o for o in objectlist if o not in objectlistOrig]
